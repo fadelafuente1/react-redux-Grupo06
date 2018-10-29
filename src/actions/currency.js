@@ -1,5 +1,6 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
+import _ from 'lodash';
 
 
 export const updateCurrency = (convertedCurrency, allCurrencies) => ({
@@ -17,7 +18,7 @@ export const exchangeCurrency = (currency1, currency2, powerOf10, powerOf10Unit,
     const allCurrencies = Object.keys(response.data.rates);
     const baseExchangeCurrencyAmount = response.data.rates[currency2];
     let convertedCurrency = [];
-    for (let value of baseCurrencyAmountList) {
+    for (let value of _.range(10)) {
       convertedCurrency.push(calculateCurrency(value, baseExchangeCurrencyAmount, powerOf10,powerOf10Unit));
     }
     dispatch(updateCurrency(convertedCurrency, allCurrencies));
