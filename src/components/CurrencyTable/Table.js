@@ -68,6 +68,7 @@ class CurrencyTable extends Component {
                   componentClass="select"
                   placeholder="select"
                   onChange={this.firstSelect}
+                  value={currency1}
                 >
                  {
                    currencies.map((x,i) => (
@@ -83,6 +84,7 @@ class CurrencyTable extends Component {
                   componentClass="select"
                   placeholder="select"
                   onChange={this.secondSelect}
+                  value={currency2}
                 >
                   {
                     currencies.map((x,i) => (
