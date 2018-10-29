@@ -7,13 +7,15 @@ class CurrencyTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      initialBaseNumber: 30000,
+      initialBaseNumber: 10,
       currency1: 'USD',
       currency2: 'EUR',
-      powerOf10thatMoves:3,
+      powerOf10thatMoves:1,
     };
     this.firstSelect = this.firstSelect.bind(this);
     this.secondSelect = this.secondSelect.bind(this);
+    this.onClickReduce = this.onClickReduce.bind(this);
+    this.onClickIncrease = this.onClickIncrease.bind(this);
   }
   
 
@@ -44,6 +46,25 @@ class CurrencyTable extends Component {
     this.updateCurrency();
   }
 
+  async onClickIncrease(event) {
+    const newBaseNumber = this.state.initialBaseNumber*10;
+    const newPowerOf10thatMoves = this.state.powerOf10thatMoves+1
+    await this.changeBaseNumber(newBaseNumber, newPowerOf10thatMoves);
+    console.log(this.state.initialBaseNumber, this.state.powerOf10thatMoves)
+    this.updateCurrency();
+  }
+  async onClickReduce(event) {
+    const newBaseNumber = this.state.initialBaseNumber/10;
+    const newPowerOf10thatMoves = this.state.powerOf10thatMoves-1
+    await this.changeBaseNumber(newBaseNumber, newPowerOf10thatMoves);
+    this.updateCurrency();
+  }
+  async changeBaseNumber(newBaseNumber, newPowerOf10thatMoves) {
+    return await this.setState({ 
+      initialBaseNumber: newBaseNumber,
+      powerOf10thatMoves: newPowerOf10thatMoves});
+  }
+
   updateCurrency = () => {
     this.props.updateCurrency(
       this.state.currency1,
@@ -52,6 +73,7 @@ class CurrencyTable extends Component {
       this.state.initialBaseNumber
     );  
   }
+
 
 
   render() {
@@ -114,10 +136,10 @@ class CurrencyTable extends Component {
         <Grid>
           <Row className="show-grid">
             <Col xs={6} md={4}>
-              <Button bsStyle="danger">Reducir</Button>
+              <Button bsStyle="danger" onClick={this.onClickReduce}>Reducir</Button>
             </Col>
             <Col xs={6} md={4}>
-              <Button bsStyle="success">Aumentar</Button>      
+              <Button bsStyle="success" onClick={this.onClickIncrease}>Aumentar</Button>      
             </Col>
           </Row>
         </Grid>
