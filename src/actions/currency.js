@@ -17,9 +17,6 @@ export const exchangeCurrency = (curren1, curren2, baseCurrencyAmountList) => (d
     console.log(baseCurrencyAmountList);
     const allCurrencies = Object.keys(response.data.rates);
     const baseExchangeCurrencyAmount = response.data.rates[curren2];
-    if (!allCurrencies.includes("USD")){
-      allCurrencies.push("USD");
-    }
     let convertedCurrency = [];
     for (let value of baseCurrencyAmountList) {
       convertedCurrency.push((value * baseExchangeCurrencyAmount).toFixed(2));
