@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, FormGroup, FormControl, ControlLabel, option } from 'react-bootstrap';
+import { Table, FormGroup, FormControl, Button, Grid, Row, Col} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import * as actions from '../../actions/index';
 
@@ -59,57 +59,72 @@ class CurrencyTable extends Component {
     const { calculatedCurrency, currencies } = this.props;
     
     return (
-      <Table responsive>
-        <thead>
-          <tr>
-            <th>
-              <FormGroup controlId="formControlsSelect">
-                <FormControl
-                  componentClass="select"
-                  placeholder="select"
-                  onChange={this.firstSelect}
-                  value={currency1}
-                >
-                 {
-                   currencies.map((x,i) => (
-                     <option key={i} value={x}> {x} </option>
-                   ))
-                 } 
-                </FormControl>
-              </FormGroup>
-            </th>
-            <th>
-              <FormGroup controlId="formControlsSelect">
-                <FormControl 
-                  componentClass="select"
-                  placeholder="select"
-                  onChange={this.secondSelect}
-                  value={currency2}
-                >
+      <div>
+        <Table responsive>
+          <thead>
+            <tr>
+              <th>
+                <FormGroup controlId="formControlsSelect">
+                  <FormControl
+                    componentClass="select"
+                    placeholder="select"
+                    onChange={this.firstSelect}
+                    value={currency1}
+                  >
                   {
                     currencies.map((x,i) => (
                       <option key={i} value={x}> {x} </option>
                     ))
-                  }
-                </FormControl>
-              </FormGroup>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-             calculatedCurrency.map((row, index) => (
-              <tr 
-              key={index}
-              onClick={this.onClickBaseCurrency.bind(this, index, row['baseNumber'])} >
-                <td > {row['baseNumber']} </td>
-                <td> { row['convertNumber'] } </td>
-              </tr>
-            ))
-          }
+                  } 
+                  </FormControl>
+                </FormGroup>
+              </th>
+              <th>
+                <FormGroup controlId="formControlsSelect">
+                  <FormControl 
+                    componentClass="select"
+                    placeholder="select"
+                    onChange={this.secondSelect}
+                    value={currency2}
+                  >
+                    {
+                      currencies.map((x,i) => (
+                        <option key={i} value={x}> {x} </option>
+                      ))
+                    }
+                  </FormControl>
+                </FormGroup>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              calculatedCurrency.map((row, index) => (
+                <tr 
+                key={index}
+                onClick={this.onClickBaseCurrency.bind(this, index, row['baseNumber'])} >
+                  <td > {row['baseNumber']} </td>
+                  <td> { row['convertNumber'] } </td>
+                </tr>
+              ))
+            }
 
-        </tbody>
-      </Table>
+          </tbody>
+        </Table>
+        <Grid>
+          <Row className="show-grid">
+            <Col xs={6} md={4}>
+              <Button bsStyle="danger">Reducir</Button>
+            </Col>
+            <Col xs={6} md={4}>
+              <Button bsStyle="success">Aumentar</Button>      
+            </Col>
+          </Row>
+        </Grid>
+        
+        
+      </div>
+      
     );
   }
 }
