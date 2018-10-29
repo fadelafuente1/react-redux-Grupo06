@@ -7,11 +7,10 @@ class CurrencyTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      initialBaseNumber: 30000,
       currency1: 'USD',
       currency2: 'EUR',
-      currentPage: 0,
-      powerOf10: 1, 
-      powerOf10Unit:1,
+      powerOf10thatMoves:3,
     };
     this.firstSelect = this.firstSelect.bind(this);
     this.secondSelect = this.secondSelect.bind(this);
@@ -19,9 +18,7 @@ class CurrencyTable extends Component {
   
 
   componentDidMount() {
-    const { currency1, currency2, currentPage, powerOf10, powerOf10Unit } = this.state;
-    const { baseCurrency } = this.props;
-    this.props.updateCurrency(currency1, currency2, powerOf10, powerOf10Unit, baseCurrency[currentPage]);
+    this.updateCurrency();
   }
 
   async firstSelect(e) {
@@ -38,31 +35,28 @@ class CurrencyTable extends Component {
     this.updateCurrency();
     
   }
-  async onClickBaseCurrency(index, event) {
-    const nextUnit = index +1;
+  async onClickBaseCurrency(index, baseNumber, event) {
+    const nextUnit = this.state.powerOf10thatMoves-1
     await this.setState({
-      powerOf10: this.state.powerOf10+1,
-      powerOf10Unit: nextUnit
+      powerOf10thatMoves: nextUnit,
+      initialBaseNumber: baseNumber
     })
     this.updateCurrency();
   }
 
   updateCurrency = () => {
-    const { baseCurrency } = this.props;
     this.props.updateCurrency(
       this.state.currency1,
       this.state.currency2,
-      this.state.powerOf10,
-      this.state.powerOf10Unit,
-      baseCurrency[this.state.currentPage]
-    );
-
+      this.state.powerOf10thatMoves,
+      this.state.initialBaseNumber
+    );  
   }
 
 
   render() {
     const { currency1, currency2, currentPage } = this.state;
-    const { baseCurrency, transCurrency, currencies } = this.props;
+    const { calculatedCurrency, currencies } = this.props;
     
     return (
       <Table responsive>
@@ -102,12 +96,12 @@ class CurrencyTable extends Component {
         </thead>
         <tbody>
           {
-             baseCurrency[currentPage].map((x, index) => (
+             calculatedCurrency.map((row, index) => (
               <tr 
               key={index}
-              onClick={this.onClickBaseCurrency.bind(this, index)} >
-                <td > {x} </td>
-                <td> { transCurrency[currentPage][index] } </td>
+              onClick={this.onClickBaseCurrency.bind(this, index, row['baseNumber'])} >
+                <td > {row['baseNumber']} </td>
+                <td> { row['convertNumber'] } </td>
               </tr>
             ))
           }
@@ -120,13 +114,12 @@ class CurrencyTable extends Component {
 
 
 const mapStateToProps = state => ({
-  baseCurrency: state.currency.baseCurrency,
-  transCurrency: state.currency.transformedCurrency,
+  calculatedCurrency: state.currency.calculatedCurrency,
   currencies: state.currency.currencyList,
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateCurrency: (baseCurrency, transCurrency, powerOf10, powerOf10Unit, currenList) => dispatch(actions.exchangeCurrency(baseCurrency, transCurrency,powerOf10, powerOf10Unit, currenList)),
+  updateCurrency: (baseCurrency, transCurrency, powerOf10thatMoves, InitialbaseNumber) => dispatch(actions.exchangeCurrency(baseCurrency, transCurrency, powerOf10thatMoves, InitialbaseNumber)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CurrencyTable);
