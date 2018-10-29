@@ -10,6 +10,8 @@ class CurrencyTable extends Component {
       currency1: 'USD',
       currency2: 'EUR',
       currentPage: 0,
+      powerOf10: 1, 
+      powerOf10Unit:1,
     };
     this.firstSelect = this.firstSelect.bind(this);
     this.secondSelect = this.secondSelect.bind(this);
@@ -17,37 +19,44 @@ class CurrencyTable extends Component {
   
 
   componentDidMount() {
-    const { currency1, currency2, currentPage } = this.state;
+    const { currency1, currency2, currentPage, powerOf10, powerOf10Unit } = this.state;
     const { baseCurrency } = this.props;
-    this.props.updateCurrency(currency1, currency2, baseCurrency[currentPage]);
+    this.props.updateCurrency(currency1, currency2, powerOf10, powerOf10Unit, baseCurrency[currentPage]);
   }
 
   async firstSelect(e) {
-    const { baseCurrency } = this.props;
     const newCurrency = e.target.value;
     await this.setState({ currency1: newCurrency });
     console.log(this.state.currency2);
-    this.props.updateCurrency(
-      this.state.currency1,
-      this.state.currency2,
-      baseCurrency[this.state.currentPage]
-    );
+    this.updateCurrency();
   }
 
   async secondSelect(e) {
-    const { baseCurrency } = this.props;
     const newCurrency = e.target.value;
     await this.setState({ currency2: newCurrency });
     console.log(this.state.currency2);
+    this.updateCurrency();
+    
+  }
+  async onClickBaseCurrency(index, event) {
+    const nextUnit = index +1;
+    await this.setState({
+      powerOf10: this.state.powerOf10+1,
+      powerOf10Unit: nextUnit
+    })
+    this.updateCurrency();
+  }
+
+  updateCurrency = () => {
+    const { baseCurrency } = this.props;
     this.props.updateCurrency(
       this.state.currency1,
       this.state.currency2,
+      this.state.powerOf10,
+      this.state.powerOf10Unit,
       baseCurrency[this.state.currentPage]
     );
-  }
-  onClickBaseCurrency(index, event) {
-    const { baseCurrency } = this.props;
-    console.log(baseCurrency[this.state.currentPage][index]);
+
   }
 
 
@@ -117,7 +126,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateCurrency: (baseCurrency, transCurrency, currenList) => dispatch(actions.exchangeCurrency(baseCurrency, transCurrency, currenList)),
+  updateCurrency: (baseCurrency, transCurrency, powerOf10, powerOf10Unit, currenList) => dispatch(actions.exchangeCurrency(baseCurrency, transCurrency,powerOf10, powerOf10Unit, currenList)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CurrencyTable);
