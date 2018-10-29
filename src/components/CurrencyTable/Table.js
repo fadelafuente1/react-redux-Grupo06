@@ -45,6 +45,10 @@ class CurrencyTable extends Component {
       baseCurrency[this.state.currentPage]
     );
   }
+  onClickBaseCurrency(index, event) {
+    const { baseCurrency } = this.props;
+    console.log(baseCurrency[this.state.currentPage][index]);
+  }
 
 
   render() {
@@ -89,10 +93,12 @@ class CurrencyTable extends Component {
         </thead>
         <tbody>
           {
-             baseCurrency[currentPage].map((x, i) => (
-              <tr key={i}>
-                <td> {x} </td>
-                <td> { transCurrency[currentPage][i] } </td>
+             baseCurrency[currentPage].map((x, index) => (
+              <tr 
+              key={index}
+              onClick={this.onClickBaseCurrency.bind(this, index)} >
+                <td > {x} </td>
+                <td> { transCurrency[currentPage][index] } </td>
               </tr>
             ))
           }
