@@ -14,15 +14,15 @@ export const exchangeCurrency = (curren1, curren2, currenList) => (dispatch) => 
   axios.get(`https://api.exchangeratesapi.io/latest?base=${curren1}`)
   .then((response) => {
     console.log('success');
-    
+    console.log(currenList);
     const allCurrencies = Object.keys(response.data.rates);
-    const baseCurrency = response.data.rates[curren2];
+    const baseExchangeCurrencyAmount = response.data.rates[curren2];
     if (!allCurrencies.includes("USD")){
       allCurrencies.push("USD");
     }
     let convertedCurrency = [];
     for (let value of currenList) {
-      convertedCurrency.push((value * baseCurrency).toFixed(2));
+      convertedCurrency.push((value * baseExchangeCurrencyAmount).toFixed(2));
     }
     console.log(convertedCurrency);
     dispatch(updateCurrency(convertedCurrency, allCurrencies));
