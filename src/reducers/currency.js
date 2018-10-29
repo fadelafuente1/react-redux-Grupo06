@@ -18,7 +18,8 @@ const updateCurrencySuccess = (state, action) => updateObject(state, {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.UPDATE_CURRENCY_SUCCESS: return updateCurrencySuccess(state, action);
+    case actionTypes.UPDATE_CURRENCY_SUCCESS: 
+      return updateCurrencySuccess(state, action);
 
     default:
       return state;
