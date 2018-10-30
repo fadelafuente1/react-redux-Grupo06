@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, FormGroup, FormControl, Button, Grid, Row, Col, Glyphicon} from 'react-bootstrap';
+import { Table, Button, Grid, Row, Col} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import * as actions from '../../actions/index';
 import '../../css/table.css';
