@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Table, FormGroup, FormControl, Button, Grid, Row, Col} from 'react-bootstrap';
+import { Table, FormGroup, FormControl, Button, Grid, Row, Col, Glyphicon} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import * as actions from '../../actions/index';
+import '../../css/table.css';
 
 class CurrencyTable extends Component {
   constructor(props) {
@@ -16,6 +17,7 @@ class CurrencyTable extends Component {
     this.secondSelect = this.secondSelect.bind(this);
     this.onClickReduce = this.onClickReduce.bind(this);
     this.onClickIncrease = this.onClickIncrease.bind(this);
+    this.onClickSwap = this.onClickSwap.bind(this);
   }
   
 
@@ -64,6 +66,13 @@ class CurrencyTable extends Component {
       initialBaseNumber: newBaseNumber,
       powerOf10thatMoves: newPowerOf10thatMoves});
   }
+  async onClickSwap(event) {
+    await this.setState({ 
+      currency1: this.state.currency2,
+      currency2: this.state.currency1,
+     });
+     this.updateCurrency();
+  }
 
   updateCurrency = () => {
     this.props.updateCurrency(
@@ -79,27 +88,35 @@ class CurrencyTable extends Component {
   render() {
     const { currency1, currency2, currentPage } = this.state;
     const { calculatedCurrency, currencies } = this.props;
-    
+    const thStyle = {
+      width: '50%',
+    }
     return (
       <div>
         <Table responsive>
           <thead>
             <tr>
-              <th>
+              <th style={thStyle}>
                 <FormGroup controlId="formControlsSelect">
                   <FormControl
                     componentClass="select"
                     placeholder="select"
                     onChange={this.firstSelect}
                     value={currency1}
+                    className='currency1-form'
                   >
                   {
                     currencies.map((x,i) => (
                       <option key={i} value={x}> {x} </option>
                     ))
-                  } 
+                  }
                   </FormControl>
+                  <Button>
+                    <Glyphicon glyph="resize-horizontal" onClick={this.onClickSwap} />
+                  </Button>
                 </FormGroup>
+                
+                  
               </th>
               <th>
                 <FormGroup controlId="formControlsSelect">
@@ -124,7 +141,9 @@ class CurrencyTable extends Component {
               calculatedCurrency.map((row, index) => (
                 <tr 
                 key={index}
-                onClick={this.onClickBaseCurrency.bind(this, index, row['baseNumber'])} >
+                onClick={this.onClickBaseCurrency.bind(this, index, row['baseNumber'])} 
+                className='clickeable' >
+                
                   <td > {row['baseNumber']} </td>
                   <td> { row['convertNumber'] } </td>
                 </tr>

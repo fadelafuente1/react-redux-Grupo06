@@ -16,15 +16,14 @@ export const exchangeCurrency = (currency1, currency2, powerOf10thatMoves, Initi
   .then((response) => {
     console.log('success');
     const allCurrencies = Object.keys(response.data.rates);
+    if (!allCurrencies.includes(currency1)){
+      allCurrencies.push(currency1);
+    }
     const baseExchangeCurrencyAmount = response.data.rates[currency2];
     let calculatedCurrency = [];
     for (let value of _.range(10)) {
       calculatedCurrency.push(calculateCurrency(value, baseExchangeCurrencyAmount,powerOf10thatMoves, InitialbaseNumber));
     }
-    calculatedCurrency.map((x,i)=> {
-      console.log(x['baseNumber'],i);
-      return(x,i);
-    })
 
 
     dispatch(updateCurrency(calculatedCurrency, allCurrencies));
