@@ -8,8 +8,11 @@ export const updateCurrency = (calculatedCurrency, allCurrencies) => ({
   calculatedCurrency,
   allCurrencies,
 });
-
-
+const updateCurrencyNames = (currency1, currency2) => ({
+  type: actionTypes.UPDATE_CURRENCY_SELECTS,
+  currency1,
+  currency2,
+})
 
 export const exchangeCurrency = (currency1, currency2, powerOf10thatMoves, InitialbaseNumber) => (dispatch) => {
   axios.get(`https://api.exchangeratesapi.io/latest?base=${currency1}`)
@@ -25,7 +28,7 @@ export const exchangeCurrency = (currency1, currency2, powerOf10thatMoves, Initi
       calculatedCurrency.push(calculateCurrency(value, baseExchangeCurrencyAmount,powerOf10thatMoves, InitialbaseNumber));
     }
 
-
+    dispatch(updateCurrencyNames(currency1, currency2));
     dispatch(updateCurrency(calculatedCurrency, allCurrencies));
     
   }).catch(() => {
