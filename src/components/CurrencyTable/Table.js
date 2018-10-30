@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import * as actions from '../../actions/index';
 import '../../css/table.css';
 import Select from './Select';
+import CurrencyRow from './CurrencyRow';
 
 class CurrencyTable extends Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class CurrencyTable extends Component {
     this.onClickReduce = this.onClickReduce.bind(this);
     this.onClickIncrease = this.onClickIncrease.bind(this);
     this.onClickSwap = this.onClickSwap.bind(this);
+    this.onClickBaseCurrency = this.onClickBaseCurrency.bind(this);
   }
   
 
@@ -36,7 +38,7 @@ class CurrencyTable extends Component {
     this.updateCurrency();
     
   }
-  async onClickBaseCurrency(index, baseNumber, event) {
+  async onClickBaseCurrency(baseNumber) {
     const nextUnit = this.state.powerOf10thatMoves-1
     await this.setState({
       powerOf10thatMoves: nextUnit,
@@ -83,7 +85,7 @@ class CurrencyTable extends Component {
 
 
   render() {
-    const { calculatedCurrency, currencies, currency1, currency2 } = this.props;
+    const { calculatedCurrency} = this.props;
     const thStyle = {
       width: '50%',
     }
@@ -94,16 +96,14 @@ class CurrencyTable extends Component {
           <thead>
             <tr>
               <th style={thStyle}>
-                <Select currencies={currencies} 
-                  isCurrency1={true} 
+                <Select isCurrency1={true} 
                   select={_this.firstSelect} 
                   buttonVisibility='visible'
                   onClickSwap={_this.onClickSwap}
                   ></Select>
               </th>
               <th>
-              <Select currencies={currencies} 
-                  isCurrency1={false} 
+              <Select isCurrency1={false} 
                   select={_this.secondSelect} 
                   buttonVisibility='hidden'
                   onClickSwap={_this.onClickSwap}
@@ -111,21 +111,7 @@ class CurrencyTable extends Component {
               </th>
             </tr>
           </thead>
-          <tbody>
-            {
-              calculatedCurrency.map((row, index) => (
-                <tr 
-                key={index}
-                onClick={this.onClickBaseCurrency.bind(this, index, row['baseNumber'])} 
-                className='clickeable' >
-                
-                  <td > {row['baseNumber']} </td>
-                  <td> { row['convertNumber'] } </td>
-                </tr>
-              ))
-            }
-
-          </tbody>
+          <CurrencyRow onClickBaseCurrency={_this.onClickBaseCurrency}></CurrencyRow>
         </Table>
         <Grid>
           <Row className="show-grid">
@@ -145,8 +131,6 @@ class CurrencyTable extends Component {
 
 
 const mapStateToProps = state => ({
-  calculatedCurrency: state.currency.calculatedCurrency,
-  currencies: state.currency.currencyList,
   currency1: state.currency.currency1,
   currency2: state.currency.currency2,
 });
