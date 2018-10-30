@@ -1,30 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import {} from 'react-bootstrap';
-import Aux from '../../Aux';
 
-const Row = (props) => {
-  const { rowData } = props;
-  return (
-    <Aux>
-      <td>
-        {' '}
-        { rowData.currency }
-        {' '}
-      </td>
-      <td>
-        {' '}
-        { rowData.transformedCurrency }
-        {' '}
-      </td>
-    </Aux>
-  );
-};
+class Select extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {}
 
-
-Row.propTypes = {
-  rowData: PropTypes.object.isRequired,
-};
-
-
-export default Row;
+  }
+  render() {
+    return(
+      <h1>Hola</h1>
+    );
+  }
+}
+export default Select;
