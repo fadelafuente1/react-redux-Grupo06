@@ -51,6 +51,7 @@ class Select extends Component {
 
 
 const mapStateToProps = state => ({
+  currencies: state.currency.currencyList,
   currency1: state.currency.currency1,
   currency2: state.currency.currency2,
 });
