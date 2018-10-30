@@ -3,14 +3,15 @@ import { Table, FormGroup, FormControl, Button, Grid, Row, Col, Glyphicon} from 
 import { connect } from 'react-redux';
 import * as actions from '../../actions/index';
 import '../../css/table.css';
+import Select from './Select';
 
 class CurrencyTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
       initialBaseNumber: 10,
-      currency1: 'USD',
-      currency2: 'EUR',
+      currency1: props.currency1,
+      currency2: props.currency2,
       powerOf10thatMoves:1,
     };
     this.firstSelect = this.firstSelect.bind(this);
@@ -25,17 +26,13 @@ class CurrencyTable extends Component {
     this.updateCurrency();
   }
 
-  async firstSelect(e) {
-    const newCurrency = e.target.value;
+  async firstSelect(newCurrency) {
     await this.setState({ currency1: newCurrency });
-    console.log(this.state.currency2);
     this.updateCurrency();
   }
 
-  async secondSelect(e) {
-    const newCurrency = e.target.value;
+  async secondSelect(newCurrency) {
     await this.setState({ currency2: newCurrency });
-    console.log(this.state.currency2);
     this.updateCurrency();
     
   }
@@ -52,7 +49,6 @@ class CurrencyTable extends Component {
     const newBaseNumber = this.state.initialBaseNumber*10;
     const newPowerOf10thatMoves = this.state.powerOf10thatMoves+1
     await this.changeBaseNumber(newBaseNumber, newPowerOf10thatMoves);
-    console.log(this.state.initialBaseNumber, this.state.powerOf10thatMoves)
     this.updateCurrency();
   }
   async onClickReduce(event) {
@@ -71,6 +67,7 @@ class CurrencyTable extends Component {
       currency1: this.state.currency2,
       currency2: this.state.currency1,
      });
+
      this.updateCurrency();
   }
 
@@ -86,53 +83,31 @@ class CurrencyTable extends Component {
 
 
   render() {
-    const { currency1, currency2, currentPage } = this.state;
-    const { calculatedCurrency, currencies } = this.props;
+    const { calculatedCurrency, currencies, currency1, currency2 } = this.props;
     const thStyle = {
       width: '50%',
     }
+    const _this = this;
     return (
       <div>
         <Table responsive>
           <thead>
             <tr>
               <th style={thStyle}>
-                <FormGroup controlId="formControlsSelect">
-                  <FormControl
-                    componentClass="select"
-                    placeholder="select"
-                    onChange={this.firstSelect}
-                    value={currency1}
-                    className='currency1-form'
-                  >
-                  {
-                    currencies.map((x,i) => (
-                      <option key={i} value={x}> {x} </option>
-                    ))
-                  }
-                  </FormControl>
-                  <Button>
-                    <Glyphicon glyph="resize-horizontal" onClick={this.onClickSwap} />
-                  </Button>
-                </FormGroup>
-                
-                  
+                <Select currencies={currencies} 
+                  isCurrency1={true} 
+                  select={_this.firstSelect} 
+                  buttonVisibility='visible'
+                  onClickSwap={_this.onClickSwap}
+                  ></Select>
               </th>
               <th>
-                <FormGroup controlId="formControlsSelect">
-                  <FormControl 
-                    componentClass="select"
-                    placeholder="select"
-                    onChange={this.secondSelect}
-                    value={currency2}
-                  >
-                    {
-                      currencies.map((x,i) => (
-                        <option key={i} value={x}> {x} </option>
-                      ))
-                    }
-                  </FormControl>
-                </FormGroup>
+              <Select currencies={currencies} 
+                  isCurrency1={false} 
+                  select={_this.secondSelect} 
+                  buttonVisibility='hidden'
+                  onClickSwap={_this.onClickSwap}
+                  ></Select>
               </th>
             </tr>
           </thead>
@@ -162,8 +137,6 @@ class CurrencyTable extends Component {
             </Col>
           </Row>
         </Grid>
-        
-        
       </div>
       
     );
@@ -174,6 +147,8 @@ class CurrencyTable extends Component {
 const mapStateToProps = state => ({
   calculatedCurrency: state.currency.calculatedCurrency,
   currencies: state.currency.currencyList,
+  currency1: state.currency.currency1,
+  currency2: state.currency.currency2,
 });
 
 const mapDispatchToProps = dispatch => ({
