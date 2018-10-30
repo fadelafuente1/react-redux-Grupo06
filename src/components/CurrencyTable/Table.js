@@ -17,6 +17,7 @@ class CurrencyTable extends Component {
     this.secondSelect = this.secondSelect.bind(this);
     this.onClickReduce = this.onClickReduce.bind(this);
     this.onClickIncrease = this.onClickIncrease.bind(this);
+    this.onClickSwap = this.onClickSwap.bind(this);
   }
   
 
@@ -65,6 +66,13 @@ class CurrencyTable extends Component {
       initialBaseNumber: newBaseNumber,
       powerOf10thatMoves: newPowerOf10thatMoves});
   }
+  async onClickSwap(event) {
+    await this.setState({ 
+      currency1: this.state.currency2,
+      currency2: this.state.currency1,
+     });
+     this.updateCurrency();
+  }
 
   updateCurrency = () => {
     this.props.updateCurrency(
@@ -104,7 +112,7 @@ class CurrencyTable extends Component {
                   }
                   </FormControl>
                   <Button>
-                    <Glyphicon glyph="resize-horizontal" />
+                    <Glyphicon glyph="resize-horizontal" onClick={this.onClickSwap} />
                   </Button>
                 </FormGroup>
                 
