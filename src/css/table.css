@@ -1,5 +1,11 @@
-#currency1-form{
+.currency1-form{
   display: inline;
   width: 85%;
   margin-right: 1%;
+}
+.clickeable{
+  cursor: pointer;
+}
+.clickeable:hover{
+  background-color: aquamarine;
 }

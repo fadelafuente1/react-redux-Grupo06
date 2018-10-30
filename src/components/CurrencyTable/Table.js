@@ -103,7 +103,7 @@ class CurrencyTable extends Component {
                     placeholder="select"
                     onChange={this.firstSelect}
                     value={currency1}
-                    id='currency1-form'
+                    className='currency1-form'
                   >
                   {
                     currencies.map((x,i) => (
@@ -141,7 +141,9 @@ class CurrencyTable extends Component {
               calculatedCurrency.map((row, index) => (
                 <tr 
                 key={index}
-                onClick={this.onClickBaseCurrency.bind(this, index, row['baseNumber'])} >
+                onClick={this.onClickBaseCurrency.bind(this, index, row['baseNumber'])} 
+                className='clickeable' >
+                
                   <td > {row['baseNumber']} </td>
                   <td> { row['convertNumber'] } </td>
                 </tr>
