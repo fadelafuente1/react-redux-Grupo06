@@ -7,9 +7,10 @@ class CurrencyTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      initialBaseNumber: 30000,
       currency1: 'USD',
       currency2: 'EUR',
-      currentPage: 0,
+      powerOf10thatMoves:3,
     };
     this.firstSelect = this.firstSelect.bind(this);
     this.secondSelect = this.secondSelect.bind(this);
@@ -17,39 +18,45 @@ class CurrencyTable extends Component {
   
 
   componentDidMount() {
-    const { currency1, currency2, currentPage } = this.state;
-    const { baseCurrency } = this.props;
-    this.props.updateCurrency(currency1, currency2, baseCurrency[currentPage]);
+    this.updateCurrency();
   }
 
   async firstSelect(e) {
-    const { baseCurrency } = this.props;
     const newCurrency = e.target.value;
     await this.setState({ currency1: newCurrency });
     console.log(this.state.currency2);
-    this.props.updateCurrency(
-      this.state.currency1,
-      this.state.currency2,
-      baseCurrency[this.state.currentPage]
-    );
+    this.updateCurrency();
   }
 
   async secondSelect(e) {
-    const { baseCurrency } = this.props;
     const newCurrency = e.target.value;
     await this.setState({ currency2: newCurrency });
     console.log(this.state.currency2);
+    this.updateCurrency();
+    
+  }
+  async onClickBaseCurrency(index, baseNumber, event) {
+    const nextUnit = this.state.powerOf10thatMoves-1
+    await this.setState({
+      powerOf10thatMoves: nextUnit,
+      initialBaseNumber: baseNumber
+    })
+    this.updateCurrency();
+  }
+
+  updateCurrency = () => {
     this.props.updateCurrency(
       this.state.currency1,
       this.state.currency2,
-      baseCurrency[this.state.currentPage]
-    );
+      this.state.powerOf10thatMoves,
+      this.state.initialBaseNumber
+    );  
   }
 
 
   render() {
     const { currency1, currency2, currentPage } = this.state;
-    const { baseCurrency, transCurrency, currencies } = this.props;
+    const { calculatedCurrency, currencies } = this.props;
     
     return (
       <Table responsive>
@@ -61,6 +68,7 @@ class CurrencyTable extends Component {
                   componentClass="select"
                   placeholder="select"
                   onChange={this.firstSelect}
+                  value={currency1}
                 >
                  {
                    currencies.map((x,i) => (
@@ -76,6 +84,7 @@ class CurrencyTable extends Component {
                   componentClass="select"
                   placeholder="select"
                   onChange={this.secondSelect}
+                  value={currency2}
                 >
                   {
                     currencies.map((x,i) => (
@@ -89,10 +98,12 @@ class CurrencyTable extends Component {
         </thead>
         <tbody>
           {
-             baseCurrency[currentPage].map((x, i) => (
-              <tr key={i}>
-                <td> {x} </td>
-                <td> { transCurrency[currentPage][i] } </td>
+             calculatedCurrency.map((row, index) => (
+              <tr 
+              key={index}
+              onClick={this.onClickBaseCurrency.bind(this, index, row['baseNumber'])} >
+                <td > {row['baseNumber']} </td>
+                <td> { row['convertNumber'] } </td>
               </tr>
             ))
           }
@@ -105,13 +116,12 @@ class CurrencyTable extends Component {
 
 
 const mapStateToProps = state => ({
-  baseCurrency: state.currency.baseCurrency,
-  transCurrency: state.currency.transformedCurrency,
+  calculatedCurrency: state.currency.calculatedCurrency,
   currencies: state.currency.currencyList,
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateCurrency: (baseCurrency, transCurrency, currenList) => dispatch(actions.exchangeCurrency(baseCurrency, transCurrency, currenList)),
+  updateCurrency: (baseCurrency, transCurrency, powerOf10thatMoves, InitialbaseNumber) => dispatch(actions.exchangeCurrency(baseCurrency, transCurrency, powerOf10thatMoves, InitialbaseNumber)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CurrencyTable);

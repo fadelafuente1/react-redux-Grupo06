@@ -3,14 +3,13 @@ import updateObject from './utility';
 import { updateCurrency } from '../actions/currency';
 
 const initialState = {
-  baseCurrency: [ [10, 20, 30, 40, 50, 60, 70, 80, 90, 100] ],
-  transformedCurrency: [[]],
+  calculatedCurrency: [],
   currencyList: [],
 };
 
 
 const updateCurrencySuccess = (state, action) => updateObject(state, {
-  transformedCurrency: [ action.convertedCurrency ],
+  calculatedCurrency: action.calculatedCurrency,
   currencyList: action.allCurrencies,
 });
 
