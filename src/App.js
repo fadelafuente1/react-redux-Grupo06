@@ -14,7 +14,7 @@ class App extends Component {
     return (
       <Grid>
         <Row className="show-grid">
-          <Col xs={12} md={12}>
+          <Col mdOffset={3} xs={12} md={6}>
             <h1 style={styles.title}>Cuckoorrency</h1>
             <Table />
           </Col>
